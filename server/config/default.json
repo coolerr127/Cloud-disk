@@ -1,4 +1,4 @@
 {
   "serverPort": 5000,
-  "dbUrl": "mongodb+srv://admin:j9DcRoTVG4EcbJpV@cloud.d9zlmfu.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp"
+  "dbUrl": "mongodb+srv://admin:j9DcRoTVG4EcbJpV@cloud.d9zlmfu.mongodb.net/cloud_disk?retryWrites=true&w=majority&appName=AtlasApp"
 }
