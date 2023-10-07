@@ -32,14 +32,14 @@ router.post(
 
       if (candidate) {
         return res
-          .status(400)
+          .status(409)
           .json({ message: `Use with email ${email} already exist` });
       }
 
       const hashPassword = await bcrypt.hash(password, 8);
       const user = new User({ email, password: hashPassword });
       await user.save();
-      return res.json({ message: "User was created" });
+      return res.status(201).json({ message: "User was created" });
     } catch (e) {
       console.error("Error:", e);
 
@@ -63,7 +63,7 @@ router.post(
       const isPassValid = bcrypt.compareSync(password, user.password);
 
       if (!isPassValid) {
-        return res.status(400).json({ message: "Invalid password" });
+        return res.status(401).json({ message: "Invalid password" });
       }
 
       const token = jwt.sign({ id: user.id }, config.get("secretKey"), {
