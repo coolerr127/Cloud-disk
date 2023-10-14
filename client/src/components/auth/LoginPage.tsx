@@ -1,25 +1,26 @@
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Avatar from "@mui/material/Avatar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
-import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
+import { LockOutlined } from "@mui/icons-material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const handleSubmit = (event: any) => {
+  const handleSubmit = async (event: any) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // const data = formDataToObject(new FormData(event.currentTarget));
+    //
+    // const res = await registration(data);
   };
 
   return (
@@ -34,7 +35,7 @@ const LoginPage: React.FC = () => {
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+          <LockOutlined />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
@@ -74,14 +75,18 @@ const LoginPage: React.FC = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+              <NavLink to={""}>
+                <Link variant="body2" component={"span"}>
+                  Forgot password?
+                </Link>
+              </NavLink>
             </Grid>
             <Grid item>
-              <Link href={"/registration"} variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
+              <NavLink to={"/registration"}>
+                <Link variant="body2" component={"span"}>
+                  Don't have an account? Sign Up
+                </Link>
+              </NavLink>
             </Grid>
           </Grid>
         </Box>

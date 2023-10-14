@@ -1,11 +1,6 @@
 import { ThemeProvider } from "@mui/material";
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import LoginPage from "./components/auth/LoginPage";
 import RegistrationPage from "./components/auth/RegistrationPage";
 import { theme } from "./theme/theme";
@@ -14,7 +9,7 @@ function App() {
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>
-        <Router>
+        <BrowserRouter>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
@@ -22,7 +17,7 @@ function App() {
 
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
-        </Router>
+        </BrowserRouter>
       </ThemeProvider>
     </React.StrictMode>
   );
