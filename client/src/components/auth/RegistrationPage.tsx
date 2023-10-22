@@ -14,16 +14,67 @@ import { NavLink } from "react-router-dom";
 import { registration } from "../../actions/user";
 import { formDataToObject } from "../../utils/common.utils";
 
+interface IFormData {
+  firstName: string;
+  email: string;
+  password: string;
+}
+
 const RegistrationPage: React.FC = () => {
   const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
+  const [formErrors, setFormErrors] = useState<IFormData>({
+    firstName: "",
+    email: "",
+    password: "",
+  });
   const handleSubmit = async (event: any) => {
     event.preventDefault();
     setLoadingBtn(true);
-    console.log(event.currentTarget);
     const data = formDataToObject(new FormData(event.currentTarget));
-    const res = await registration(data);
+
+    const isValid = validateForm(data as IFormData);
+
+    if (isValid) {
+      await registration(data);
+    }
 
     setLoadingBtn(false);
+  };
+
+  const validateForm = (formData: IFormData) => {
+    const errors = {
+      firstName: "",
+      email: "",
+      password: "",
+    };
+
+    let isValid = true;
+
+    if (formData.firstName.trim() === "") {
+      errors.firstName = "First name is required";
+      isValid = false;
+    }
+
+    if (formData.email.trim() === "") {
+      errors.email = "Email is required";
+      isValid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      errors.email = "Invalid email address";
+      isValid = false;
+    }
+
+    if (formData.password.length < 5) {
+      errors.password = "Password must be at least 5 characters long";
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+
+    return isValid;
+  };
+
+  const resetFieldError = (event: React.FocusEvent) => {
+    setFormErrors({ ...formErrors, [event.target.id]: "" });
   };
 
   return (
@@ -45,26 +96,19 @@ const RegistrationPage: React.FC = () => {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              {/*<TextField*/}
-              {/*  autoComplete="given-name"*/}
-              {/*  name="firstName"*/}
-              {/*  required*/}
-              {/*  fullWidth*/}
-              {/*  id="firstName"*/}
-              {/*  label="First Name"*/}
-              {/*  autoFocus*/}
-              {/*/>*/}
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              {/*<TextField*/}
-              {/*  required*/}
-              {/*  fullWidth*/}
-              {/*  id="lastName"*/}
-              {/*  label="Last Name"*/}
-              {/*  name="lastName"*/}
-              {/*  autoComplete="family-name"*/}
-              {/*/>*/}
+            <Grid item xs={12}>
+              <TextField
+                autoComplete="given-name"
+                name="firstName"
+                required
+                fullWidth
+                id="firstName"
+                label="First Name"
+                autoFocus
+                error={!!formErrors.firstName}
+                helperText={formErrors.firstName}
+                onBlur={resetFieldError}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -74,6 +118,9 @@ const RegistrationPage: React.FC = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                error={!!formErrors.email}
+                helperText={formErrors.email}
+                onBlur={resetFieldError}
               />
             </Grid>
             <Grid item xs={12}>
@@ -85,6 +132,9 @@ const RegistrationPage: React.FC = () => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                error={!!formErrors.password}
+                helperText={formErrors.password}
+                onBlur={resetFieldError}
               />
             </Grid>
           </Grid>
@@ -111,7 +161,6 @@ const RegistrationPage: React.FC = () => {
               />
             )}
           </Box>
-
           <Grid container justifyContent="flex-end">
             <Grid item>
               <NavLink to={"/login"}>

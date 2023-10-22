@@ -1,13 +1,14 @@
 import { create } from "zustand";
+import { IUser } from "../actions/user";
 
-interface UserStore {
-  currentUser: object;
+interface IUserStore {
+  currentUser: IUser | null;
   isAuth: boolean;
+  userAuthorization: (user: IUser) => void;
 }
 
-const useUserStore = create<UserStore>((set) => ({
-  currentUser: {},
+export const useUserStore = create<IUserStore>((set) => ({
+  currentUser: null,
   isAuth: false,
-  // increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  // removeAllBears: () => set({ bears: 0 }),
+  userAuthorization: (user: IUser) => set({ currentUser: user, isAuth: true }),
 }));

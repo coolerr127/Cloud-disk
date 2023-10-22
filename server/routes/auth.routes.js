@@ -12,11 +12,18 @@ router.post(
   "/registration",
 
   [
-    check("email", "Uncorrected email").isEmail(),
-    check(
-      "password",
-      "Password must be longer than 3 and shorted than 12",
-    ).isLength({ min: 3, max: 12 }),
+    check("firstName").trim().notEmpty().withMessage("Uncorrected first name"),
+
+    check("email")
+      .trim()
+      .notEmpty()
+      .withMessage("Uncorrected email")
+      .isEmail()
+      .withMessage("Invalid email"),
+
+    check("password")
+      .isLength({ min: 5 })
+      .withMessage("Password must be at least 5 characters long"),
   ],
 
   async (req, res) => {
@@ -26,7 +33,7 @@ router.post(
         return res.status(400).json({ message: "Uncorrect request", errors });
       }
 
-      const { email, password } = req.body;
+      const { email, password, firstName } = req.body;
 
       const candidate = await User.findOne({ email });
 
@@ -37,12 +44,10 @@ router.post(
       }
 
       const hashPassword = await bcrypt.hash(password, 8);
-      const user = new User({ email, password: hashPassword });
+      const user = new User({ email, password: hashPassword, firstName });
       await user.save();
       return res.status(201).json({ message: "User was created" });
     } catch (e) {
-      console.error("Error:", e);
-
       return res.status(400).json({ message: e });
     }
   },
@@ -71,6 +76,7 @@ router.post(
       });
 
       return res.json({
+        message: "Successful authorization",
         token,
         user: {
           id: user.id,
