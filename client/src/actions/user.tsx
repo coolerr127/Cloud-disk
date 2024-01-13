@@ -18,7 +18,7 @@ interface IAuthorizationResponse extends IResponse {
   user: IUser;
 }
 
-export interface IAuthorizationData {
+export interface ILoginData {
   email: string;
   password: string;
 }
@@ -30,15 +30,36 @@ export const registration = async (data: any) => {
     .catch((err) => errorHandler(err));
 };
 
-export const authorization = async (
-  data: IAuthorizationData,
+export const login = async (
+  data: ILoginData,
 ): Promise<IAuthorizationResponse> => {
   try {
     const response = await axios.post(`${AUTH_API}/login`, data);
     localStorage.setItem("token", response.data.token);
     return responseHandler(response);
-  } catch (err: any) {
-    errorHandler(err);
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      errorHandler(err);
+    } else {
+      console.error("An unexpected error occurred", err);
+    }
+    throw err;
+  }
+};
+
+export const authorization = async (): Promise<IAuthorizationResponse> => {
+  try {
+    const response = await axios.get(`${AUTH_API}/auth`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    return responseHandler(response);
+  } catch (err: unknown) {
+    console.log(err);
+    if (axios.isAxiosError(err)) {
+      errorHandler(err);
+    } else {
+      console.error("An unexpected error occurred", err);
+    }
     throw err;
   }
 };

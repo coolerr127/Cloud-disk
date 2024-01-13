@@ -12,9 +12,9 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
 root.render(
-  <React.StrictMode>
-    <SnackbarProvider>
-      <App />
-    </SnackbarProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <SnackbarProvider>
+    <App />
+  </SnackbarProvider>,
+  // </React.StrictMode>
 );
