@@ -39,7 +39,7 @@ function App() {
   if (loading) {
     return <div>LOADING...</div>;
   }
-  console.log(isAuth);
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>

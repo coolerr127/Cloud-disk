@@ -8,9 +8,10 @@ const AUTH_API = `${API}/auth`;
 
 export interface IUser {
   id: Guid;
-  email: string;
-  diskSpace: number;
-  usedSpace: number;
+  firstName: string;
+  // email: string;
+  // diskSpace: number;
+  // usedSpace: number;
 }
 
 interface IAuthorizationResponse extends IResponse {

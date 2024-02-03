@@ -117,10 +117,11 @@ router.get(
         token,
         user: {
           id: user.id,
-          email: user.email,
-          diskSpace: user.diskSpace,
-          usedSpace: user.usedSpace,
-          avatar: user.avatar,
+          firstName: user.firstName,
+          // email: user.email,
+          // diskSpace: user.diskSpace,
+          // usedSpace: user.usedSpace,
+          // avatar: user.avatar,
         },
       });
     } catch (e) {
