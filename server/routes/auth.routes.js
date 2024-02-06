@@ -83,10 +83,7 @@ router.post(
         token,
         user: {
           id: user.id,
-          email: user.email,
-          diskSpace: user.diskSpace,
-          usedSpace: user.usedSpace,
-          avatar: user.avatar,
+          firstName: user.firstName,
         },
       });
     } catch (e) {
@@ -118,10 +115,6 @@ router.get(
         user: {
           id: user.id,
           firstName: user.firstName,
-          // email: user.email,
-          // diskSpace: user.diskSpace,
-          // usedSpace: user.usedSpace,
-          // avatar: user.avatar,
         },
       });
     } catch (e) {

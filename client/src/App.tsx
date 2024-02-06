@@ -14,27 +14,28 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    userInit().then();
-  }, []);
+    const userInit = async () => {
+      setLoading(true);
 
-  const userInit = async () => {
-    setLoading(true);
+      const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      try {
-        const { user } = await authorization();
-        userAuthorization(user);
-      } catch (e) {
-        console.error(e);
-      } finally {
+      if (token) {
+        try {
+          const { user } = await authorization();
+          userAuthorization(user);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setLoading(false);
+        }
+      } else {
         setLoading(false);
       }
-    } else {
-      setLoading(false);
-    }
-  };
+    };
+
+    userInit().then();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) {
     return <div>LOADING...</div>;
@@ -47,7 +48,6 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/registration" element={<RegistrationPage />} />
-            {/*<Route path="/" element={<MainPage />} />*/}
 
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>

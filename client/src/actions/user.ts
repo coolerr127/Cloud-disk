@@ -1,10 +1,10 @@
 import axios from "axios";
-import { API } from "../constants/common.constants";
+import { apiUrl } from "../constants/common.constants";
 import { IResponse } from "../constants/common.interfaces";
 import { Guid } from "../constants/common.types";
 import { errorHandler, responseHandler } from "../utils/common.utils";
 
-const AUTH_API = `${API}/auth`;
+const AUTH_API = `${apiUrl}/auth`;
 
 export interface IUser {
   id: Guid;
@@ -55,12 +55,12 @@ export const authorization = async (): Promise<IAuthorizationResponse> => {
     });
     return responseHandler(response);
   } catch (err: unknown) {
-    console.log(err);
     if (axios.isAxiosError(err)) {
       errorHandler(err);
     } else {
       console.error("An unexpected error occurred", err);
     }
+    localStorage.removeItem("token");
     throw err;
   }
 };
