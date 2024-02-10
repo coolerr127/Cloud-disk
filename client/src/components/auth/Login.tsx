@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { authorization, IAuthorizationData } from "../../actions/user";
+import { NavLink, useNavigate } from "react-router-dom";
+import { ILoginData, login } from "../../actions/user";
 import { useUserStore } from "../../stores/user.store";
 import { formDataToObject } from "../../utils/common.utils";
 
@@ -24,29 +24,36 @@ interface IFormData {
   password: string;
 }
 
-const Authorization: React.FC = () => {
+const Login: React.FC = () => {
+  const navigate = useNavigate();
+
   const { userAuthorization } = useUserStore();
 
   const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
-  const [formErrors, setFormErrors] = useState<IAuthorizationData>({
+  const [formErrors, setFormErrors] = useState<ILoginData>({
     email: "",
     password: "",
   });
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingBtn(true);
     const data = formDataToObject(new FormData(event.currentTarget));
 
-    const isValid = validateForm(data as IAuthorizationData);
+    const isValid = validateForm(data as ILoginData);
 
     if (isValid) {
       try {
-        const { user } = await authorization(data as IAuthorizationData);
-        await userAuthorization(user);
-      } catch (err) {}
+        const { user } = await login(data as ILoginData);
+        userAuthorization(user);
+        navigate("/");
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoadingBtn(false);
+      }
+    } else {
+      setLoadingBtn(false);
     }
-
-    setLoadingBtn(false);
   };
 
   const validateForm = (formData: IFormData) => {
@@ -172,4 +179,4 @@ const Authorization: React.FC = () => {
   );
 };
 
-export default Authorization;
+export default Login;

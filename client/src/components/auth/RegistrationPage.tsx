@@ -10,7 +10,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { registration } from "../../actions/user";
 import { formDataToObject } from "../../utils/common.utils";
 
@@ -21,6 +21,8 @@ interface IFormData {
 }
 
 const RegistrationPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [loadingBtn, setLoadingBtn] = useState<boolean>(false);
   const [formErrors, setFormErrors] = useState<IFormData>({
     firstName: "",
@@ -35,7 +37,12 @@ const RegistrationPage: React.FC = () => {
     const isValid = validateForm(data as IFormData);
 
     if (isValid) {
-      await registration(data);
+      try {
+        await registration(data);
+        navigate("/login");
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     setLoadingBtn(false);

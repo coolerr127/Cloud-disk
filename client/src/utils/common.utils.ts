@@ -12,7 +12,6 @@ export const formDataToObject = (formData: FormData): {} => {
 };
 
 export const responseHandler = (res: AxiosResponse) => {
-  console.log(res.data.message);
   enqueueSnackbar(res.data.message, {
     variant: "success",
     anchorOrigin: { vertical: "top", horizontal: "center" },
@@ -23,10 +22,19 @@ export const responseHandler = (res: AxiosResponse) => {
 };
 
 export const errorHandler = (err: AxiosError<{ message: string }>) => {
-  enqueueSnackbar(err?.response?.data?.message, {
-    variant: "error",
-    anchorOrigin: { vertical: "top", horizontal: "center" },
-    autoHideDuration: 3000,
-  });
-  console.error(err);
+  if (err?.response?.data?.message) {
+    enqueueSnackbar(err?.response?.data?.message, {
+      variant: "error",
+      anchorOrigin: { vertical: "top", horizontal: "center" },
+      autoHideDuration: 3000,
+    });
+  } else {
+    enqueueSnackbar("Network Error", {
+      variant: "error",
+      anchorOrigin: { vertical: "top", horizontal: "center" },
+      autoHideDuration: 3000,
+    });
+  }
+
+  throw err;
 };
